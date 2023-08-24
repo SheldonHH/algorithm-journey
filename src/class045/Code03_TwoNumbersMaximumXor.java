@@ -1,10 +1,13 @@
-package class044;
+package class045;
 
 import java.util.HashSet;
 
 // 数组中两个数的最大异或值
+// 给你一个整数数组 nums ，返回 nums[i] XOR nums[j] 的最大运算结果，其中 0<=i<=j<=n
+// 1 <= nums.length <= 2 * 10^5
+// 0 <= nums[i] <= 2^31 - 1
 // 测试链接 : https://leetcode.cn/problems/maximum-xor-of-two-numbers-in-an-array/
-public class Code05_TwoNumbersMaximumXor {
+public class Code03_TwoNumbersMaximumXor {
 
 	// 准备这么多静态空间就够了，实验出来的
 	// 如果测试数据升级了规模，就改大这个值

@@ -49,38 +49,46 @@ public class Code01_KillMonsterEverySkillUseOnce {
 				}
 				int ans = f(n, 0, m);
 				out.println(ans == Integer.MAX_VALUE ? -1 : ans);
-				out.flush();
 			}
 		}
+		out.flush();
+		br.close();
+		out.close();
 	}
 
-	public static int f(int n, int i, int rest) {
-		if (rest <= 0) {
+	// kill[i]、blood[i]
+	// n : 一共几个技能
+	// i : 当前来到了第几号技能
+	// r : 怪兽目前的剩余血量
+	public static int f(int n, int i, int r) {
+		if (r <= 0) {
+			// 之前的决策已经让怪兽挂了！返回使用了多少个节能
 			return i;
 		}
+		// r > 0
 		if (i == n) {
+			// 无效，之前的决策无效
 			return Integer.MAX_VALUE;
 		}
+		// 返回至少需要几个技能可以将怪兽杀死
 		int ans = Integer.MAX_VALUE;
 		for (int j = i; j < n; j++) {
 			swap(i, j);
-			if (rest > blood[i]) {
-				ans = Math.min(ans, f(n, i + 1, rest - kill[i]));
-			} else {
-				ans = Math.min(ans, f(n, i + 1, rest - kill[i] * 2));
-			}
+			ans = Math.min(ans, f(n, i + 1, r - (r > blood[i] ? kill[i] : kill[i] * 2)));
 			swap(i, j);
 		}
 		return ans;
 	}
 
+	// i号技能和j号技能，参数交换
+	// j号技能要来到i位置，试一下
 	public static void swap(int i, int j) {
-		int a = kill[i];
-		int b = blood[i];
+		int tmp = kill[i];
 		kill[i] = kill[j];
+		kill[j] = tmp;
+		tmp = blood[i];
 		blood[i] = blood[j];
-		kill[j] = a;
-		blood[j] = b;
+		blood[j] = tmp;
 	}
 
 }

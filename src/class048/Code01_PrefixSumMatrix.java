@@ -12,9 +12,9 @@ public class Code01_PrefixSumMatrix {
 			int n = matrix.length;
 			int m = matrix[0].length;
 			sum = new int[n + 1][m + 1];
-			for (int a = 1, b = 0; b < n; a++, b++) {
-				for (int c = 1, d = 0; d < m; c++, d++) {
-					sum[a][c] = matrix[b][d];
+			for (int a = 1, c = 0; c < n; a++, c++) {
+				for (int b = 1, d = 0; d < m; b++, d++) {
+					sum[a][b] = matrix[c][d];
 				}
 			}
 			for (int i = 1; i <= n; i++) {
@@ -24,10 +24,10 @@ public class Code01_PrefixSumMatrix {
 			}
 		}
 
-		public int sumRegion(int row1, int col1, int row2, int col2) {
-			row2++;
-			col2++;
-			return sum[row2][col2] - sum[row2][col1] - sum[row1][col2] + sum[row1][col1];
+		public int sumRegion(int a, int b, int c, int d) {
+			c++;
+			d++;
+			return sum[c][d] - sum[c][b] - sum[a][d] + sum[a][b];
 		}
 
 	}

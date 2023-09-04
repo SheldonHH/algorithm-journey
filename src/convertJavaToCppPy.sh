@@ -14,6 +14,7 @@ find . -type f -name "*.java" | while read -r file; do
     # 创建相同名字但前缀为"C"和数字的C++和Python文件
     new_name="C${num}_$(echo $base_name | sed "s/Code[0-9]*_//")"
     touch "${dir_name}/${new_name}.cpp"
+    touch "${dir_name}/${new_name}.rs"
     touch "${dir_name}/${new_name}.py"
 done
 

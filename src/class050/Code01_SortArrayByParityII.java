@@ -1,6 +1,6 @@
 package class050;
 
-// 按奇偶排序数组 II
+// 按奇偶排序数组II
 // 给定一个非负整数数组 nums。nums 中一半整数是奇数 ，一半整数是偶数
 // 对数组进行排序，以便当 nums[i] 为奇数时，i也是奇数
 // 当 nums[i] 为偶数时， i 也是 偶数
@@ -8,6 +8,7 @@ package class050;
 // 测试链接 : https://leetcode.cn/problems/sort-array-by-parity-ii/
 public class Code01_SortArrayByParityII {
 
+	// 时间复杂度O(n)，额外空间复杂度O(1)
 	public static int[] sortArrayByParityII(int[] nums) {
 		int n = nums.length;
 		for (int odd = 1, even = 0; odd < n && even < n;) {

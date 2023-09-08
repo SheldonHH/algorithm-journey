@@ -10,34 +10,45 @@ import java.util.Arrays;
 // 测试链接 : https://leetcode.cn/problems/find-k-th-smallest-pair-distance/
 public class Code04_FindKthSmallestPairDistance {
 
+	// 时间复杂度O(n * log(n) + log(max-min) * n)，额外空间复杂度O(1)
 	public static int smallestDistancePair(int[] nums, int k) {
 		int n = nums.length;
 		Arrays.sort(nums);
-		int l = 0;
-		int r = nums[n - 1] - nums[0];
 		int ans = 0;
-		while (l <= r) {
-			int dis = l + ((r - l) >> 1);
-			int cnt = f(nums, dis);
+		// [0, 最大-最小]，不停二分
+		for (int l = 0, r = nums[n - 1] - nums[0], m, cnt; l <= r;) {
+			// m中点，arr中任意两数的差值 <= m
+			m = l + ((r - l) >> 1);
+			// 返回数字对的数量
+			cnt = f(nums, m);
 			if (cnt >= k) {
-				ans = dis;
-				r = dis - 1;
+				ans = m;
+				r = m - 1;
 			} else {
-				l = dis + 1;
+				l = m + 1;
 			}
 		}
 		return ans;
 	}
 
-	public static int f(int[] arr, int dis) {
-		int cnt = 0;
+	// arr中任意两数的差值 <= limit
+	// 这样的数字配对，有几对？
+	public static int f(int[] arr, int limit) {
+		int ans = 0;
+		// O(n)
 		for (int l = 0, r = 0; l < arr.length; l++) {
-			while (r < arr.length && arr[r] <= arr[l] + dis) {
+			// l......r r+1
+			while (r + 1 < arr.length && arr[r + 1] - arr[l] <= limit) {
 				r++;
 			}
-			cnt += r - l - 1;
+			// arr[l...r]范围上的数差值的绝对值都不超过limit
+			// arr[0...3]
+			// 0,1
+			// 0,2
+			// 0,3
+			ans += r - l;
 		}
-		return cnt;
+		return ans;
 	}
 
 }

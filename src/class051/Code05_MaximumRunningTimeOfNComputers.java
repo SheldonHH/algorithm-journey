@@ -1,7 +1,5 @@
 package class051;
 
-import java.util.Arrays;
-
 // 同时运行N台电脑的最长时间
 // 你有 n 台电脑。给你整数 n 和一个下标从 0 开始的整数数组 batteries
 // 其中第 i 个电池可以让一台电脑 运行 batteries[i] 分钟
@@ -15,21 +13,20 @@ import java.util.Arrays;
 // 测试链接 : https://leetcode.cn/problems/maximum-running-time-of-n-computers/
 public class Code05_MaximumRunningTimeOfNComputers {
 
-	public static long maxRunTime(int n, int[] arr) {
-		Arrays.sort(arr);
-		int size = arr.length;
-		long[] sums = new long[size];
-		sums[0] = arr[0];
-		for (int i = 1; i < size; i++) {
-			sums[i] = sums[i - 1] + arr[i];
+	// 单纯的二分答案法
+	// 提交时把函数名改为maxRunTime
+	// 时间复杂度O(n * log(sum))，额外空间复杂度O(1)
+	public static long maxRunTime1(int num, int[] arr) {
+		long sum = 0;
+		for (int x : arr) {
+			sum += x;
 		}
-		long l = 0;
-		long m = 0;
-		long r = sums[size - 1] / n;
-		long ans = -1;
-		while (l <= r) {
-			m = (l + r) / 2;
-			if (ok(arr, sums, m, n)) {
+		long ans = 0;
+		// [0, sum]，不停二分
+		for (long l = 0, r = sum, m; l <= r;) {
+			// m中点，让num台电脑共同运行m分钟，能不能做到
+			m = l + ((r - l) >> 1);
+			if (f1(arr, num, m)) {
 				ans = m;
 				l = m + 1;
 			} else {
@@ -39,23 +36,75 @@ public class Code05_MaximumRunningTimeOfNComputers {
 		return ans;
 	}
 
-	public static boolean ok(int[] arr, long[] sum, long time, int num) {
-		int l = 0;
-		int m = 0;
-		int r = arr.length - 1;
-		int left = arr.length;
-		while (l <= r) {
-			m = (l + r) / 2;
-			if (arr[m] >= time) {
-				left = m;
-				r = m - 1;
+	// 让num台电脑共同运行time分钟，能不能做到
+	public static boolean f1(int[] arr, int num, long time) {
+		// 碎片电量总和
+		long sum = 0;
+		for (int x : arr) {
+			if (x > time) {
+				num--;
 			} else {
-				l = m + 1;
+				// x <= time，是碎片电池
+				sum += x;
+			}
+			if (sum >= (long) num * time) {
+				// 碎片电量 >= 台数 * 要求
+				return true;
 			}
 		}
-		num -= arr.length - left;
-		long rest = left == 0 ? 0 : sum[left - 1];
-		return time * (long) num <= rest;
+		return false;
+	}
+
+	// 二分答案法 + 增加分析(贪心)
+	// 提交时把函数名改为maxRunTime
+	// 时间复杂度O(n * log(max))，额外空间复杂度O(1)
+	public static long maxRunTime2(int num, int[] arr) {
+		int max = 0;
+		long sum = 0;
+		for (int x : arr) {
+			max = Math.max(max, x);
+			sum += x;
+		}
+		// 就是增加了这里的逻辑
+		if (sum > (long) max * num) {
+			// 所有电池的最大电量是max
+			// 如果此时sum > (long) max * num，
+			// 说明 : 最终的供电时间一定在 >= max，而如果最终的供电时间 >= max
+			// 说明 : 对于最终的答案X来说，所有电池都是课上讲的"碎片拼接"的概念
+			// 那么寻找 ? * num <= sum 的情况中，尽量大的 ? 即可
+			// 即sum / num
+			return sum / num;
+		}
+		// 最终的供电时间一定在 < max范围上
+		// [0, sum]二分范围，可能定的比较粗，虽然不影响，但毕竟是有点慢
+		// [0, max]二分范围！更精细的范围，二分次数会变少
+		int ans = 0;
+		for (int l = 0, r = max, m; l <= r;) {
+			m = l + ((r - l) >> 1);
+			if (f2(arr, num, m)) {
+				ans = m;
+				l = m + 1;
+			} else {
+				r = m - 1;
+			}
+		}
+		return ans;
+	}
+
+	public static boolean f2(int[] arr, int num, int time) {
+		// 碎片电量总和
+		long sum = 0;
+		for (int x : arr) {
+			if (x > time) {
+				num--;
+			} else {
+				sum += x;
+			}
+			if (sum >= (long) num * time) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

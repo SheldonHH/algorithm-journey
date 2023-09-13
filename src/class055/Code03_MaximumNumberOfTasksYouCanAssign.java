@@ -16,49 +16,55 @@ import java.util.Arrays;
 // 测试链接 : https://leetcode.cn/problems/maximum-number-of-tasks-you-can-assign/
 public class Code03_MaximumNumberOfTasksYouCanAssign {
 
+	public static int[] ts;
+
+	public static int[] ws;
+
 	public static int MAXN = 50001;
 
 	public static int[] deque = new int[MAXN];
 
-	public static int l, r;
+	public static int h, t;
 
 	public static int maxTaskAssign(int[] tasks, int[] workers, int pills, int strength) {
-		int n = tasks.length;
-		Arrays.sort(tasks);
-		Arrays.sort(workers);
+		ts = tasks;
+		ws = workers;
+		Arrays.sort(ts);
+		Arrays.sort(ws);
+		int n = ts.length;
+		int m = ws.length;
 		int ans = 0;
-		for (int left = 0, right = n, mid; left <= right;) {
-			mid = (left + right) / 2;
-			if (need(tasks, 0, mid - 1, workers, workers.length - mid, workers.length - 1, strength) <= pills) {
+		for (int l = 0, r = n, mid; l <= r;) {
+			mid = (l + r) / 2;
+			if (need(0, mid - 1, m - mid, m - 1, strength) <= pills) {
 				ans = mid;
-				left = mid + 1;
+				l = mid + 1;
 			} else {
-				right = mid - 1;
+				r = mid - 1;
 			}
 		}
 		return ans;
 	}
 
-	public static int need(int[] ts, int tl, int tr, int[] ws, int wl, int wr, int s) {
+	public static int need(int tl, int tr, int wl, int wr, int s) {
 		if (wl < 0) {
 			return Integer.MAX_VALUE;
 		}
-		l = r = 0;
-		int ti = tl;
+		h = t = 0;
 		int ans = 0;
-		for (int wi = wl; wi <= wr; wi++) {
-			for (; ti <= tr && ts[ti] <= ws[wi]; ti++) {
-				deque[r++] = ti;
+		for (int i = wl, j = tl; i <= wr; i++) {
+			for (; j <= tr && ts[j] <= ws[i]; j++) {
+				deque[t++] = j;
 			}
-			if (l < r && ts[deque[l]] <= ws[wi]) {
-				l++;
+			if (h < t && ts[deque[h]] <= ws[i]) {
+				h++;
 			} else {
-				for (; ti <= tr && ts[ti] <= ws[wi] + s; ti++) {
-					deque[r++] = ti;
+				for (; j <= tr && ts[j] <= ws[i] + s; j++) {
+					deque[t++] = j;
 				}
-				if (l < r) {
+				if (h < t) {
 					ans++;
-					r--;
+					t--;
 				} else {
 					return Integer.MAX_VALUE;
 				}

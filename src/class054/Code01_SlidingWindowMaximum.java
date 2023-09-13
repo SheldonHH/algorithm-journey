@@ -11,23 +11,33 @@ public class Code01_SlidingWindowMaximum {
 
 	public static int[] deque = new int[MAXN];
 
-	public static int l, r;
+	public static int h, t;
 
-	public static int[] maxSlidingWindow(int[] arr, int w) {
+	public static int[] maxSlidingWindow(int[] arr, int k) {
+		h = t = 0;
 		int n = arr.length;
-		l = r = 0;
-		int[] ans = new int[n - w + 1];
-		for (int i = 0, fill = 0; i < n; i++) {
-			while (l < r && arr[deque[r - 1]] <= arr[i]) {
-				r--;
+		// 先形成长度为k-1的窗口
+		for (int i = 0; i < k - 1; i++) {
+			// 大 -> 小
+			while (h < t && arr[deque[t - 1]] <= arr[i]) {
+				t--;
 			}
-			deque[r++] = i;
-			if (i >= w - 1) {
-				ans[fill] = arr[deque[l]];
-				if (deque[l] == fill) {
-					l++;
-				}
-				fill++;
+			deque[t++] = i;
+		}
+		int m = n - k + 1;
+		int[] ans = new int[m];
+		// 当前窗口k-1长度
+		for (int l = 0, r = k - 1; l < m; l++, r++) {
+			// 少一个，要让r位置的数进来
+			while (h < t && arr[deque[t - 1]] <= arr[r]) {
+				t--;
+			}
+			deque[t++] = r;
+			// 收集答案
+			ans[l] = arr[deque[h]];
+			// l位置的数出去
+			if (deque[h] == l) {
+				h++;
 			}
 		}
 		return ans;

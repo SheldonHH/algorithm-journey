@@ -13,9 +13,10 @@ import java.util.Arrays;
 // 如果有多个解决方案，则返回其中任意一个
 // words中的单词一定都是小写英文字母组成的
 // 测试链接 : https://leetcode.cn/problems/alien-dictionary/
-public class Code03_AlienDictionary {
+public class Code04_AlienDictionary {
 
 	public static String alienOrder(String[] words) {
+		// 入度表，26种字符
 		int[] indegree = new int[26];
 		Arrays.fill(indegree, -1);
 		for (String w : words) {
@@ -23,6 +24,10 @@ public class Code03_AlienDictionary {
 				indegree[w.charAt(i) - 'a'] = 0;
 			}
 		}
+		// 'a' -> 0
+		// 'b' -> 1
+		// 'z' -> 25
+		// x -> x - 'a'
 		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
 		for (int i = 0; i < 26; i++) {
 			graph.add(new ArrayList<>());

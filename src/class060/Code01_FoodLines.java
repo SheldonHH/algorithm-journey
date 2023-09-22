@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 import java.io.StreamTokenizer;
 import java.util.Arrays;
 
-public class Code02_FoodLines {
+public class Code01_FoodLines {
 
 	public static int MAXN = 5001;
 
@@ -25,33 +25,34 @@ public class Code02_FoodLines {
 
 	public static int MOD = 80112002;
 
-	public static int[] indegree = new int[MAXN];
-
-	public static boolean[] food = new boolean[MAXN];
-
-	public static int[] lines = new int[MAXN];
-
-	public static int[] queue = new int[MAXN];
-
+	// 链式前向星建图
 	public static int[] head = new int[MAXN];
 
 	public static int[] next = new int[MAXM];
 
 	public static int[] to = new int[MAXM];
 
-	public static int cnt, n, m;
+	public static int cnt;
+
+	// 拓扑排序需要的队列
+	public static int[] queue = new int[MAXN];
+
+	// 拓扑排序需要的入度表
+	public static int[] indegree = new int[MAXN];
+
+	// 拓扑排序需要的推送信息
+	public static int[] lines = new int[MAXN];
+
+	public static int n, m;
 
 	public static void build(int n) {
 		cnt = 1;
 		Arrays.fill(indegree, 0, n + 1, 0);
-		Arrays.fill(food, 0, n + 1, false);
 		Arrays.fill(lines, 0, n + 1, 0);
 		Arrays.fill(head, 0, n + 1, 0);
 	}
 
 	public static void addEdge(int u, int v) {
-		food[u] = true;
-		indegree[v]++;
 		next[cnt] = head[u];
 		to[cnt] = v;
 		head[u] = cnt++;
@@ -72,6 +73,7 @@ public class Code02_FoodLines {
 				in.nextToken();
 				v = (int) in.nval;
 				addEdge(u, v);
+				indegree[v]++;
 			}
 			out.println(ways());
 		}
@@ -89,19 +91,21 @@ public class Code02_FoodLines {
 				lines[i] = 1;
 			}
 		}
-		while (l < r) {
-			for (int u = queue[l++], v, edge = head[u]; edge != 0; edge = next[edge]) {
-				v = to[edge];
-				lines[v] = (lines[v] + lines[u]) % MOD;
-				if (--indegree[v] == 0) {
-					queue[r++] = v;
-				}
-			}
-		}
 		int ans = 0;
-		for (int i = 1; i <= n; i++) {
-			if (!food[i]) {
-				ans = (ans + lines[i]) % MOD;
+		while (l < r) {
+			int u = queue[l++];
+			if (head[u] == 0) {
+				// 当前的u节点不再有后续邻居了
+				ans = (ans + lines[u]) % MOD;
+			} else {
+				for (int ei = head[u], v; ei > 0; ei = next[ei]) {
+					// u -> v
+					v = to[ei];
+					lines[v] = (lines[v] + lines[u]) % MOD;
+					if (--indegree[v] == 0) {
+						queue[r++] = v;
+					}
+				}
 			}
 		}
 		return ans;

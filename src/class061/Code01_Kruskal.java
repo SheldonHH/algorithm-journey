@@ -23,11 +23,12 @@ public class Code01_Kruskal {
 
 	public static int[] father = new int[MAXN];
 
-	// u, v, w
+	// u, v, w 收集所有的边
 	public static int[][] edges = new int[MAXM][3];
 
 	public static int n, m;
 
+	// 并查集清空 
 	public static void build() {
 		for (int i = 1; i <= n; i++) {
 			father[i] = i;

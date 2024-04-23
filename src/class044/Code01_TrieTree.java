@@ -13,8 +13,10 @@ public class Code01_TrieTree {
 		class TrieNode {
 			public int pass;
 			public int end;
-			public TrieNode[] nexts;
-
+			public TrieNode[] nexts; // 下标0-25
+			//一个节点路有东西
+			
+ 
 			public TrieNode() {
 				pass = 0;
 				end = 0;
@@ -25,18 +27,18 @@ public class Code01_TrieTree {
 		private TrieNode root;
 
 		public Trie1() {
-			root = new TrieNode();
+			root = new TrieNode(); //初始化的时候定义即可
 		}
 
 		public void insert(String word) {
 			TrieNode node = root;
-			node.pass++;
+			node.pass++; // 头节点 p值++
 			for (int i = 0, path; i < word.length(); i++) { // 从左往右遍历字符
 				path = word.charAt(i) - 'a'; // 由字符，对应成走向哪条路
 				if (node.nexts[path] == null) {
 					node.nexts[path] = new TrieNode();
 				}
-				node = node.nexts[path];
+				node = node.nexts[path]; //如果有，不新建直接复用
 				node.pass++;
 			}
 			node.end++;
@@ -83,13 +85,14 @@ public class Code01_TrieTree {
 				}
 				node = node.nexts[path];
 			}
-			return node.pass;
+			return node.pass; //有多少个
 		}
 
 	}
 
 	// 路是哈希表实现的
 	// 提交时把类名、构造方法改为Trie
+	// 如果其他语言，比较多，哈希表的方式
 	class Trie2 {
 
 		class TrieNode {
@@ -125,10 +128,10 @@ public class Code01_TrieTree {
 		}
 
 		public void erase(String word) {
-			if (countWordsEqualTo(word) > 0) {
+			if (countWordsEqualTo(word) > 0) { // 之前，插入过前缀树
 				TrieNode node = root;
 				TrieNode next;
-				node.pass--;
+				node.pass--; // 立即渐减
 				for (int i = 0, path; i < word.length(); i++) {
 					path = word.charAt(i);
 					next = node.nexts.get(path);

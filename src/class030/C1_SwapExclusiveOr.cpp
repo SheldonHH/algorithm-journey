@@ -24,6 +24,8 @@ int main() {
 // This swap works when i != j
 // It fails when i == j
 // So, while this method is known, it's not recommended
+// 因为i和j最好是不一样的内存地址
+// 必须保证非0
 void swap(int arr[], int i, int j) {
     arr[i] = arr[i] ^ arr[j];
     arr[j] = arr[i] ^ arr[j];

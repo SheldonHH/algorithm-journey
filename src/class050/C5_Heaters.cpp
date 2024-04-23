@@ -1,3 +1,6 @@
+#include <vector>  
+#include <algorithm> // 为了使用sort函数  
+using namespace std; 
 class Solution {
 public:
     int findRadius(vector<int>& houses, vector<int>& heaters) {
@@ -21,3 +24,4 @@ public:
 
     }
 };
+

@@ -8,7 +8,7 @@ package class117;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class Code03_FrequentValues2 {
+public class Code04_FrequentValues1 {
 
 	public static int MAXN = 100001;
 
@@ -62,6 +62,8 @@ public class Code03_FrequentValues2 {
 		if (lbucket == rbucket) {
 			return r - l + 1;
 		}
+		// a : 最左侧桶在此时l~r范围上的数字有几个
+		// b : 最右侧桶在此时l~r范围上的数字有几个
 		int a = right[lbucket] - l + 1, b = r - left[rbucket] + 1, c = 0;
 		if (lbucket + 1 < rbucket) {
 			int from = lbucket + 1, to = rbucket - 1, p = log2[to - from + 1];

@@ -2,10 +2,8 @@ package class118;
 
 // LCA问题Tarjan算法解法
 // 测试链接 : https://www.luogu.com.cn/problem/P3379
-// 提交以下的code，提交时请把类名改成"Main"
-// c++这么写能通过，java会因为递归层数太多而爆栈
-// java能通过的写法参考本节课Code02_LCATarjan2文件
-
+// 所有递归函数一律改成等义的迭代版
+// 提交以下的code，提交时请把类名改成"Main"，可以通过所有用例
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +13,7 @@ import java.io.PrintWriter;
 import java.io.StreamTokenizer;
 import java.util.Arrays;
 
-public class Code02_LCATarjan1 {
+public class Code03_LCATarjan2 {
 
 	public static int MAXN = 500001;
 
@@ -66,34 +64,68 @@ public class Code02_LCATarjan1 {
 		headQuery[u] = qcnt++;
 	}
 
-	// 并查集找代表节点递归版
-	// 一般来说都这么写，但是本题附加的测试数据很毒
-	// java这么写就会因为递归太深而爆栈，c++这么写就能通过
+	// 并查集找代表节点迭代版
+	// stack是为了实现迭代版而准备的栈
+	public static int[] stack = new int[MAXN];
+
 	public static int find(int i) {
-		if (i != father[i]) {
-			father[i] = find(father[i]);
+		int n = 0;
+		while (i != father[i]) {
+			stack[n++] = i;
+			i = father[i];
 		}
-		return father[i];
+		while (n > 0) {
+			father[stack[--n]] = i;
+		}
+		return i;
 	}
 
-	// tarjan算法递归版
-	// 一般来说都这么写，但是本题附加的测试数据很毒
-	// java这么写就会因为递归太深而爆栈，c++这么写就能通过
-	public static void tarjan(int u, int f) {
-		visited[u] = true;
-		for (int e = headEdge[u], v; e != 0; e = edgeNext[e]) {
-			v = edgeTo[e];
-			if (v != f) {
-				tarjan(v, u);
+	// tarjan算法迭代版
+	// nfe是为了实现迭代版而准备的栈
+	public static int[][] ufe = new int[MAXN][3];
+
+	public static int stackSize, u, f, e;
+
+	public static void push(int u, int f, int e) {
+		ufe[stackSize][0] = u;
+		ufe[stackSize][1] = f;
+		ufe[stackSize][2] = e;
+		stackSize++;
+	}
+
+	public static void pop() {
+		--stackSize;
+		u = ufe[stackSize][0];
+		f = ufe[stackSize][1];
+		e = ufe[stackSize][2];
+	}
+
+	public static void tarjan(int root) {
+		stackSize = 0;
+		push(root, 0, -1);
+		while (stackSize > 0) {
+			pop();
+			if (e == -1) {
+				visited[u] = true;
+				e = headEdge[u];
+			} else {
+				e = edgeNext[e];
+			}
+			if (e != 0) {
+				push(u, f, e);
+				if (edgeTo[e] != f) {
+					push(edgeTo[e], u, -1);
+				}
+			} else {
+				for (int q = headQuery[u], v; q != 0; q = queryNext[q]) {
+					v = queryTo[q];
+					if (visited[v]) {
+						ans[queryIndex[q]] = find(v);
+					}
+				}
+				father[u] = f;
 			}
 		}
-		for (int e = headQuery[u], v; e != 0; e = queryNext[e]) {
-			v = queryTo[e];
-			if (visited[v]) {
-				ans[queryIndex[e]] = find(v);
-			}
-		}
-		father[u] = f;
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -123,7 +155,7 @@ public class Code02_LCATarjan1 {
 			addQuery(u, v, i);
 			addQuery(v, u, i);
 		}
-		tarjan(root, 0);
+		tarjan(root);
 		for (int i = 1; i <= m; i++) {
 			out.println(ans[i]);
 		}

@@ -2,9 +2,8 @@ package class118;
 
 // LCA问题树上倍增解法
 // 测试链接 : https://www.luogu.com.cn/problem/P3379
-// 提交以下的code，提交时请把类名改成"Main"
-// c++这么写能通过，java会因为递归层数太多而爆栈
-// java能通过的写法参考本节课Code01_LCAMultiply2文件
+// 所有递归函数一律改成等义的迭代版
+// 提交以下的code，提交时请把类名改成"Main"，可以通过所有用例
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +13,7 @@ import java.io.PrintWriter;
 import java.io.StreamTokenizer;
 import java.util.Arrays;
 
-public class Code01_LCAMultiply1 {
+public class Code02_LCAMultiply2 {
 
 	public static int MAXN = 500001;
 
@@ -54,18 +53,46 @@ public class Code01_LCAMultiply1 {
 		head[u] = cnt++;
 	}
 
-	// dfs递归版
-	// 一般来说都这么写，但是本题附加的测试数据很毒
-	// java这么写就会因为递归太深而爆栈，c++这么写就能通过
-	public static void dfs(int u, int f) {
-		deep[u] = deep[f] + 1;
-		stjump[u][0] = f;
-		for (int p = 1; (1 << p) <= deep[u]; p++) {
-			stjump[u][p] = stjump[stjump[u][p - 1]][p - 1];
-		}
-		for (int e = head[u]; e != 0; e = next[e]) {
-			if (to[e] != f) {
-				dfs(to[e], u);
+	// dfs迭代版
+	// nfe是为了实现迭代版而准备的栈
+	public static int[][] ufe = new int[MAXN][3];
+
+	public static int stackSize, u, f, e;
+
+	public static void push(int u, int f, int e) {
+		ufe[stackSize][0] = u;
+		ufe[stackSize][1] = f;
+		ufe[stackSize][2] = e;
+		stackSize++;
+	}
+
+	public static void pop() {
+		--stackSize;
+		u = ufe[stackSize][0];
+		f = ufe[stackSize][1];
+		e = ufe[stackSize][2];
+	}
+
+	public static void dfs(int root) {
+		stackSize = 0;
+		push(root, 0, -1);
+		while (stackSize > 0) {
+			pop();
+			if (e == -1) {
+				deep[u] = deep[f] + 1;
+				stjump[u][0] = f;
+				for (int s = 1; (1 << s) <= deep[u]; s++) {
+					stjump[u][s] = stjump[stjump[u][s - 1]][s - 1];
+				}
+				e = head[u];
+			} else {
+				e = next[e];
+			}
+			if (e != 0) {
+				push(u, f, e);
+				if (to[e] != f) {
+					push(to[e], u, -1);
+				}
 			}
 		}
 	}
@@ -112,7 +139,7 @@ public class Code01_LCAMultiply1 {
 			addEdge(u, v);
 			addEdge(v, u);
 		}
-		dfs(root, 0);
+		dfs(root);
 		for (int i = 1, a, b; i <= m; i++) {
 			in.nextToken();
 			a = (int) in.nval;

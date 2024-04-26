@@ -15,7 +15,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StreamTokenizer;
 
-public class Code02_SparseTableGCD {
+public class Code03_SparseTableGCD {
 
 	public static int MAXN = 1001;
 

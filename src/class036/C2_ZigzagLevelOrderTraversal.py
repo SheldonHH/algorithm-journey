@@ -12,7 +12,7 @@ class TreeNode:
 # 如果测试数据量变大了就修改这个值
 MAXN = 2001
 
-queue = [None] * MAXN
+q_arr = [None] * MAXN
 l, r = 0, 0
 
 def zigzagLevelOrder(root):
@@ -20,7 +20,7 @@ def zigzagLevelOrder(root):
     if root is not None:
         global l, r
         l, r = 0, 0
-        queue[r] = root
+        q_arr[r] = root
         r += 1
         # false 代表从左往右
         # true 代表从右往左
@@ -33,16 +33,16 @@ def zigzagLevelOrder(root):
             # 左 -> 右, i = i + 1
             # 右 -> 左, i = i - 1
             for i in range(r-1, l-1, -1) if reverse else range(l, r):
-                cur = queue[i]
+                cur = q_arr[i]
                 list_.append(cur.val)
             for i in range(size):
-                cur = queue[l]
+                cur = q_arr[l]
                 l += 1
                 if cur.left is not None:
-                    queue[r] = cur.left
+                    q_arr[r] = cur.left
                     r += 1
                 if cur.right is not None:
-                    queue[r] = cur.right
+                    q_arr[r] = cur.right
                     r += 1
             ans.append(list_)
             reverse = not reverse

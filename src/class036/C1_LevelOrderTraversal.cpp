@@ -45,7 +45,7 @@ vector<vector<int>> levelOrder1(TreeNode* root) {
 // 如果测试数据量增大，修改此值
 const int MAXN = 2001;
 
-TreeNode* queue2[MAXN];
+TreeNode* q_array[MAXN];
 int l, r;
 
 // 使用每次处理一层的优化 BFS 方法进行层序遍历，推荐此方法
@@ -54,18 +54,18 @@ vector<vector<int>> levelOrder2(TreeNode* root) {
     if (root != nullptr) {
         l = 0;
         r = 0;
-        queue2[r++] = root;
+        q_array[r++] = root;
         while (l < r) { // 队列中还有节点
             int size = r - l;
             vector<int> list;
             for (int i = 0; i < size; ++i) {
-                TreeNode* cur = queue2[l++];
+                TreeNode* cur = q_array[l++];
                 list.push_back(cur->val);
                 if (cur->left != nullptr) {
-                    queue2[r++] = cur->left;
+                    q_array[r++] = cur->left;
                 }
                 if (cur->right != nullptr) {
-                    queue2[r++] = cur->right;
+                    q_array[r++] = cur->right;
                 }
             }
             ans.push_back(list);

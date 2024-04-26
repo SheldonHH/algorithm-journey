@@ -1,55 +1,53 @@
 class TreeNode:
-    """二叉树节点定义"""
+    """树节点定义"""
     def __init__(self, val=0, left=None, right=None):
         self.val = val
         self.left = left
         self.right = right
 
-class Solution:
-    # 最大节点数量
-    MAXN = 10001
+# 全局变量定义
+MAXN = 10001
+stack = [None] * MAXN
+r = 0
+min_val = float('inf')
+max_val = float('-inf')
 
-    def __init__(self):
-        self.stack = [None] * self.MAXN
-        self.r = 0
-
-    def isValidBST1(self, head: TreeNode) -> bool:
-        """检验二叉搜索树方法1"""
-        if not head:
-            return True
-
-        pre = None
-        self.r = 0
-        while self.r > 0 or head:
-            if head:
-                self.stack[self.r] = head
-                self.r += 1
-                head = head.left
-            else:
-                head = self.stack[self.r - 1]
-                self.r -= 1
-                if pre and pre.val >= head.val:
-                    return False
-                pre = head
-                head = head.right
+def isValidBST1(head):
+    """使用中序遍历的迭代方式检查二叉搜索树"""
+    global r, stack
+    if head is None:
         return True
+    pre = None
+    r = 0
+    while r > 0 or head is not None:
+        if head is not None:
+            stack[r] = head
+            r += 1
+            head = head.left
+        else:
+            head = stack[r - 1]
+            r -= 1
+            if pre is not None and pre.val >= head.val:
+                return False
+            pre = head
+            head = head.right
+    return True
 
-    def isValidBST2(self, head: TreeNode) -> bool:
-        """检验二叉搜索树方法2"""
-        self.min = float('inf')
-        self.max = float('-inf')
-        return self._isValidBST_rec(head)
+def isValidBST2(head):
+    """使用递归方式检查二叉搜索树，并更新最小值和最大值"""
+    global min_val, max_val
+    if head is None:
+        min_val = float('inf')
+        max_val = float('-inf')
+        return True
+    lok = isValidBST2(head.left)
+    lmin = min_val
+    lmax = max_val
+    rok = isValidBST2(head.right)
+    rmin = min_val
+    rmax = max_val
+    min_val = min(min(lmin, rmin), head.val)
+    max_val = max(max(lmax, rmax), head.val)
+    return lok and rok and lmax < head.val and head.val < rmin
 
-    def _isValidBST_rec(self, node: TreeNode) -> bool:
-        if not node:
-            return True
-
-        lok = self._isValidBST_rec(node.left)
-        lmin = self.min
-        lmax = self.max
-
-        rok = self._isValidBST_rec(node.right)
-        rmin = self.min
-        rmax = self.max
-
-        self.min = min(lmin, rmin
+# 注意：在实际提交代码时需要将函数名从 isValidBST1 和 isValidBST2 修改为 isValidBST

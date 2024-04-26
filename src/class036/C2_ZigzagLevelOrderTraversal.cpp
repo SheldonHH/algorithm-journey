@@ -35,7 +35,10 @@ public:
                 // reverse == true, 右 -> 左， r-1....l, 收集size个
                 // 左 -> 右, i = i + 1
                 // 右 -> 左, i = i - 1
-                for (int i = reverse ? r - 1 : l, j = reverse ? -1 : 1, k = 0; k < size; i += j, k++) {
+                int start = reverse ? r - 1 : l;  
+                int step = reverse ? -1 : 1;              
+                // 从 start 开始，根据 step 的正负值递增或递减 i  
+                for (int i = start, k = 0; k < size; i += step, k++) { 
                     TreeNode* cur = queue[i];
                     list.push_back(cur->val);
                 }

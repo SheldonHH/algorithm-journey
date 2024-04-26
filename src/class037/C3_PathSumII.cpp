@@ -29,20 +29,20 @@ private:
         if (cur->left == nullptr && cur->right == nullptr) {
             // 叶节点
             if (cur->val + sum == aim) {
-                path.push_back(cur->val);
-                copy(path, ans);
-                path.pop_back();
+                path.push_back(cur->val); // 加入自己
+                copy(path, ans); // path生成好
+                path.pop_back(); // 从path中移除最后一个
             }
         } else {
             // 不是叶节点
             path.push_back(cur->val);
-            if (cur->left != nullptr) {
+            if (cur->left != nullptr) { // 左非空
                 f(cur->left, aim, sum + cur->val, path, ans);
             }
-            if (cur->right != nullptr) {
+            if (cur->right != nullptr) { // 右非空
                 f(cur->right, aim, sum + cur->val, path, ans);
             }
-            path.pop_back();
+            path.pop_back(); //删掉自己，恢复现场
         }
     }
 

@@ -38,7 +38,8 @@ public:
                 int start = reverse ? r - 1 : l;  
                 int step = reverse ? -1 : 1;              
                 // 从 start 开始，根据 step 的正负值递增或递减 i  
-                for (int i = start, k = 0; k < size; i += step, k++) { 
+                for (int k = 0; k < size; k++) {
+                    int i = start + step; 
                     TreeNode* cur = queue[i];
                     list.push_back(cur->val);
                 }

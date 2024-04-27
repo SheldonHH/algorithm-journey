@@ -40,23 +40,23 @@ class Solution {
     }
 
     // 用于存储子树的最小值和最大值
-    long min, max;
+    long minn, maxx;
 
     // 检验二叉搜索树方法2
     bool isValidBST2(TreeNode* head) {
         if (head == nullptr) {
-            min = LONG_MAX;
-            max = LONG_MIN;
+            minn = LONG_MAX;
+            maxx = LONG_MIN;
             return true;
         }
         bool lok = isValidBST2(head->left);
-        long lmin = min;
-        long lmax = max;
+        long lmin = minn;
+        long lmax = maxx;
         bool rok = isValidBST2(head->right);
-        long rmin = min;
-        long rmax = max;
-        min = std::min({lmin, rmin, head->val});
-        max = std::max({lmax, rmax, head->val});
+        long rmin = minn;
+        long rmax = maxx;
+        minn = min({lmin, rmin, head->val});
+        maxx = max({lmax, rmax, head->val});
         return lok && rok && lmax < head->val && head->val < rmin;
     }
 };

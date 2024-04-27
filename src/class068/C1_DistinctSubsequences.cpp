@@ -1,13 +1,14 @@
 #include <vector>
 #include <string>
 
+using namespace std;
 class Code01_DistinctSubsequences {
 public:
     // 动态规划方法
-    static int numDistinct1(const std::string& str, const std::string& target) {
+    static int numDistinct1(const string& str, const string& target) {
         int n = str.size();
         int m = target.size();
-        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(m + 1, 0));
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
 
         // 初始化，s的任何前缀形成的序列都包含空序列
         for (int i = 0; i <= n; i++) {
@@ -26,10 +27,10 @@ public:
     }
 
     // 动态规划，空间优化版
-    static int numDistinct2(const std::string& str, const std::string& target) {
+    static int numDistinct2(const string& str, const string& target) {
         int n = str.size();
         int m = target.size();
-        std::vector<int> dp(m + 1, 0);
+        vector<int> dp(m + 1, 0);
         dp[0] = 1; // 任何字符串的子序列都包含空序列
 
         for (int i = 1; i <= n; i++) {

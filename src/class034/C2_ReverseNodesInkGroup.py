@@ -26,7 +26,7 @@ def reverseKGroup(head, k):
 
     start = head
     end = team_end(start, k)
-    if end is None:
+    if end is None: # 如果第一组都不够K个，就可以返回了
         return head
     # 第一组很特殊因为牵扯到换头的问题
     head = end

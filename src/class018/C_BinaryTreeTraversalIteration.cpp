@@ -83,7 +83,7 @@ void posOrderOneStack(TreeNode *h) {
                 s.push(cur->left);
             } else if (cur->right != nullptr && lastPrint != cur->right) {
                 s.push(cur->right);
-            } else {
+            } else { 
                 cout << cur->val << " ";
                 lastPrint = cur;
                 s.pop();

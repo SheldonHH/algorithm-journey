@@ -1,54 +1,41 @@
 import random
 
+# 插入、删除和获取随机元素O(1)时间且允许有重复数字的结构
 class RandomizedCollection:
     def __init__(self):
-        # 创建一个字典来存储值到其索引集合的映射
-        self.map = {}
-        # 创建一个列表来存储元素
-        self.arr = []
+        self.idx = {}  # Maps values to sets of indices where they appear in the list
+        self.nums = []  # Stores all elements, including duplicates
 
     def insert(self, val):
-        # 将值添加到列表末尾
-        self.arr.append(val)
-
-        # 获取值在map中的索引集合
-        if val not in self.map:
-            self.map[val] = set()
-
-        # 将新元素的索引添加到集合中
-        self.map[val].add(len(self.arr) - 1)
-
-        # 返回集合是否只有一个元素
-        return len(self.map[val]) == 1
+        """ Inserts a value to the collection. Returns true if the collection did not already contain the specified element. """
+        self.nums.append(val)
+        if val in self.idx:
+            self.idx[val].add(len(self.nums) - 1)
+            return False
+        else:
+            self.idx[val] = {len(self.nums) - 1}
+            return True
 
     def remove(self, val):
-        if val not in self.map or not self.map[val]:
+        """ Removes a value from the collection. Returns true if the collection contained the specified element. """
+        if val not in self.idx or not self.idx[val]:
             return False
+        last_element = self.nums[-1]
+        idx_to_remove = self.idx[val].pop()  # Remove any index of the element to be removed
 
-        # 获取要移除的值的索引集合
-        valSet = self.map[val]
-        valAnyIndex = valSet.pop()
+        # If it's not the last element, swap it with the last one
+        if idx_to_remove != len(self.nums) - 1:
+            self.nums[idx_to_remove] = last_element
+            self.idx[last_element].add(idx_to_remove)
+            self.idx[last_element].remove(len(self.nums) - 1)
 
-        # 获取列表末尾的值
-        endValue = self.arr[-1]
+        self.nums.pop()  # Remove the last element from the list
 
-        if valAnyIndex != len(self.arr) - 1:
-            # 用列表末尾的值替换要移除的值
-            self.arr[valAnyIndex] = endValue
-
-            # 更新末尾值的索引集合
-            self.map[endValue].add(valAnyIndex)
-            self.map[endValue].remove(len(self.arr) - 1)
-
-        # 从列表中移除末尾元素
-        self.arr.pop()
-
-        # 如果val的索引集合为空，则从map中移除
-        if not valSet:
-            del self.map[val]
+        if not self.idx[val]:
+            del self.idx[val]
 
         return True
 
     def getRandom(self):
-        # 随机返回列表中的一个元素
-        return self.arr[random.randint(0, len(self.arr) - 1)]
+        """ Get a random element from the collection. """
+        return random.choice(self.nums

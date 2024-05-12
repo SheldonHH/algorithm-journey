@@ -40,25 +40,34 @@ public class Code05_ValidateBinarySearchTree {
 		}
 		return true;
 	}
+};
 
-	public static long min, max;
+const int MAXN = 10001;
+TreeNode* stack[MAXN];
+int r;
 
-	// 提交时改名为isValidBST
-	public static boolean isValidBST2(TreeNode head) {
-		if (head == null) {
-			min = Long.MAX_VALUE;
-			max = Long.MIN_VALUE;
+long minVal, maxVal;
+
+class Solution {
+public:
+	// Function to validate if a tree is a BST
+	bool isValidBST(TreeNode* root) {
+		if (root == nullptr) {
+			minVal = LONG_MAX;
+			maxVal = LONG_MIN;
 			return true;
 		}
-		boolean lok = isValidBST2(head.left);
-		long lmin = min;
-		long lmax = max;
-		boolean rok = isValidBST2(head.right);
-		long rmin = min;
-		long rmax = max;
-		min = Math.min(Math.min(lmin, rmin), head.val);
-		max = Math.max(Math.max(lmax, rmax), head.val);
-		return lok && rok && lmax < head.val && head.val < rmin;
-	}
+		bool leftOk = isValidBST(root->left);
+		long leftMin = minVal;
+		long leftMax = maxVal;
 
-}
+		bool rightOk = isValidBST(root->right);
+		long rightMin = minVal;
+		long rightMax = maxVal;
+
+		minVal = min({leftMin, rightMin, static_cast<long>(root->val)});
+		maxVal = max({leftMax, rightMax, static_cast<long>(root->val)});
+
+		return leftOk && rightOk && leftMax < root->val && root->val < rightMin;
+	}
+};

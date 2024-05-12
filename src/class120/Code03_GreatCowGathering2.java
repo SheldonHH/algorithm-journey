@@ -1,13 +1,8 @@
 package class120;
 
-// 牛群聚集(迭代版)
-// 一共有n个节点，编号1~n，每个点有牛的数量
-// 一共有n-1条边把所有点联通起来形成一棵树，每条边有权值
-// 想把所有的牛汇聚在一点，希望走过的总距离最小
-// 返回总距离最小是多少
-// 利用重心的性质：
-// 树上的边权如果都>=0，不管边权怎么分布，所有节点都走向重心的总距离和最小
+// 迭代版
 // 测试链接 : https://www.luogu.com.cn/problem/P2986
+// 所有递归函数一律改成等义的迭代版
 // 提交以下的code，提交时请把类名改成"Main"，可以通过所有用例
 
 import java.io.BufferedReader;
@@ -24,9 +19,13 @@ public class Code03_GreatCowGathering2 {
 
 	public static int n;
 
-	public static int[] cow = new int[MAXN];
-
 	public static int cowSum;
+
+	public static int cnt;
+
+	public static int bestSize, center;
+
+	public static int[] cow = new int[MAXN];
 
 	public static int[] head = new int[MAXN];
 
@@ -36,19 +35,15 @@ public class Code03_GreatCowGathering2 {
 
 	public static int[] weight = new int[MAXN << 1];
 
-	public static int cnt;
-
-	public static int best, center;
-
 	public static int[] size = new int[MAXN];
 
-	public static int[] path = new int[MAXN];
+	public static int[] pathcost = new int[MAXN];
 
 	public static void build() {
 		cnt = 1;
 		Arrays.fill(head, 1, n + 1, 0);
 		cowSum = 0;
-		best = Integer.MAX_VALUE;
+		bestSize = Integer.MAX_VALUE;
 	}
 
 	public static void addEdge(int u, int v, int w) {
@@ -78,35 +73,34 @@ public class Code03_GreatCowGathering2 {
 	}
 
 	// 迭代版
-	// 不会改看讲解118，讲了怎么从递归版改成迭代版
 	public static void findCenter(int root) {
 		stackSize = 0;
 		push(root, 0, -1);
 		while (stackSize > 0) {
 			pop();
-			if (e == -1) { // 如果第一次来到当前节点u
+			if (e == -1) {
 				size[u] = cow[u];
 				e = head[u];
-			} else { // 如果不是第一次来到当前节点u
+			} else {
 				e = next[e];
 			}
-			if (e != 0) { // 如果还有后续边、还有后续子节点
+			if (e != 0) {
 				push(u, f, e);
 				if (to[e] != f) {
 					push(to[e], u, -1);
 				}
-			} else { // 如果没有后续边了，那么就做最后的统计工作
-				int maxsub = 0;
+			} else {
+				int max = 0;
 				for (int i = head[u], v; i != 0; i = next[i]) {
 					v = to[i];
 					if (v != f) {
 						size[u] += size[v];
-						maxsub = Math.max(maxsub, size[v]);
+						max = Math.max(max, size[v]);
 					}
 				}
-				maxsub = Math.max(maxsub, cowSum - size[u]);
-				if (maxsub < best) {
-					best = maxsub;
+				max = Math.max(max, cowSum - size[u]);
+				if (max < bestSize) {
+					bestSize = max;
 					center = u;
 				}
 			}
@@ -114,8 +108,7 @@ public class Code03_GreatCowGathering2 {
 	}
 
 	// 迭代版
-	// 不会改看讲解118，讲了怎么从递归版改成迭代版
-	public static void setPath(int root) {
+	public static void setWeights(int root) {
 		stackSize = 0;
 		push(root, 0, -1);
 		while (stackSize > 0) {
@@ -129,7 +122,7 @@ public class Code03_GreatCowGathering2 {
 				push(u, f, e);
 				int v = to[e];
 				if (v != f) {
-					path[v] = path[u] + weight[e];
+					pathcost[v] = pathcost[u] + weight[e];
 					push(v, u, -1);
 				}
 			}
@@ -168,11 +161,11 @@ public class Code03_GreatCowGathering2 {
 			cowSum += cow[i];
 		}
 		findCenter(1);
-		path[center] = 0;
-		setPath(center);
+		pathcost[center] = 0;
+		setWeights(center);
 		long ans = 0;
 		for (int i = 1; i <= n; i++) {
-			ans += (long) cow[i] * path[i];
+			ans += (long) cow[i] * pathcost[i];
 		}
 		return ans;
 	}

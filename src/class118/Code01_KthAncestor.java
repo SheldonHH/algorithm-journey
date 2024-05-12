@@ -18,31 +18,19 @@ public class Code01_KthAncestor {
 
 		public static int LIMIT = 16;
 
-		// 根据节点个数n，计算出2的几次方就够用了
 		public static int power;
 
-		public static int log2(int n) {
-			int ans = 0;
-			while ((1 << ans) <= (n >> 1)) {
-				ans++;
-			}
-			return ans;
-		}
+		public static int cnt;
 
-		// 链式前向星建图
 		public static int[] head = new int[MAXN];
 
 		public static int[] next = new int[MAXN];
 
 		public static int[] to = new int[MAXN];
 
-		public static int cnt;
-
-		// deep[i] : 节点i在第几层
-		public static int[] deep = new int[MAXN];
-
-		// stjump[i][p] : 节点i往上跳2的p次方步，到达的节点编号
 		public static int[][] stjump = new int[MAXN][LIMIT];
+
+		public static int[] deep = new int[MAXN];
 
 		public TreeAncestor(int n, int[] parent) {
 			power = log2(n);
@@ -54,25 +42,38 @@ public class Code01_KthAncestor {
 			dfs(0, 0);
 		}
 
+		public static int log2(int n) {
+			int ans = 0;
+			while ((1 << ans) <= (n >> 1)) {
+				ans++;
+			}
+			return ans;
+		}
+
 		public static void addEdge(int u, int v) {
 			next[cnt] = head[u];
 			to[cnt] = v;
 			head[u] = cnt++;
 		}
 
-		// 当前来到i节点，i节点父亲节点是f
-		public static void dfs(int i, int f) {
-			if (i == 0) {
-				deep[i] = 1;
+		public static void dfs(int u, int f) {
+			if (u == 0) {
+				deep[u] = 1;
 			} else {
-				deep[i] = deep[f] + 1;
+				deep[u] = deep[f] + 1;
 			}
-			stjump[i][0] = f;
-			for (int p = 1; p <= power; p++) {
-				stjump[i][p] = stjump[stjump[i][p - 1]][p - 1];
+			stjump[u][0] = f;
+			for (int p = 1; (1 << p) <= deep[u]; p++) {
+				stjump[u][p] = stjump[stjump[u][p - 1]][p - 1];
 			}
-			for (int e = head[i]; e != 0; e = next[e]) {
-				dfs(to[e], i);
+			for (int e = head[u]; e != 0; e = next[e]) {
+				// 其实这里不用加这个判断，因为可以直接建有向图
+				// 那么从u开始走是不可能遇到f的
+				// 但如果是双向图就需要加这个判断了，防止走回头路
+				// 所以一律加上作为提醒
+				if (to[e] != f) {
+					dfs(to[e], u);
+				}
 			}
 		}
 
@@ -80,14 +81,13 @@ public class Code01_KthAncestor {
 			if (deep[i] <= k) {
 				return -1;
 			}
-			// s是想要去往的层数
-			int s = deep[i] - k;
+			int j = deep[i] - k;
 			for (int p = power; p >= 0; p--) {
-				if (deep[stjump[i][p]] >= s) {
+				if (deep[stjump[i][p]] > j) {
 					i = stjump[i][p];
 				}
 			}
-			return i;
+			return stjump[i][0];
 		}
 
 	}

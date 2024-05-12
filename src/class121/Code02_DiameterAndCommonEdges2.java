@@ -1,10 +1,6 @@
 package class121;
 
-// 所有直径的公共部分(迭代版)
-// 给定一棵树，边权都为正
-// 打印直径长度、所有直径的公共部分有几条边
 // 测试链接 : https://www.luogu.com.cn/problem/P3304
-// 提交以下的code，提交时请把类名改成"Main"，可以通过所有用例
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,24 +26,19 @@ public class Code02_DiameterAndCommonEdges2 {
 
 	public static int cnt;
 
-	public static int start;
-
-	public static int end;
+	public static boolean[] visited = new boolean[MAXN];
 
 	public static long[] dist = new long[MAXN];
 
-	public static int[] last = new int[MAXN];
-
-	public static long diameter;
-
-	public static boolean[] diameterPath = new boolean[MAXN];
+	public static long maxDist;
 
 	public static int commonEdges;
 
 	public static void build() {
 		cnt = 1;
 		Arrays.fill(head, 1, n + 1, 0);
-		Arrays.fill(diameterPath, 1, n + 1, false);
+		Arrays.fill(visited, 1, n + 1, false);
+		maxDist = 0;
 	}
 
 	public static void addEdge(int u, int v, int w) {
@@ -57,15 +48,21 @@ public class Code02_DiameterAndCommonEdges2 {
 		head[u] = cnt++;
 	}
 
-	public static void road() {
-		dfs(1);
+	public static int start, end;
+
+	public static long diameter;
+
+	public static int[] path = new int[MAXN];
+
+	public static void sedp() {
+		dfs1(1);
 		start = 1;
 		for (int i = 2; i <= n; i++) {
 			if (dist[i] > dist[start]) {
 				start = i;
 			}
 		}
-		dfs(start);
+		dfs1(start);
 		end = 1;
 		for (int i = 2; i <= n; i++) {
 			if (dist[i] > dist[end]) {
@@ -75,8 +72,7 @@ public class Code02_DiameterAndCommonEdges2 {
 		diameter = dist[end];
 	}
 
-	// dfs方法改迭代版
-	// 不会改看讲解118，讲了怎么从递归版改成迭代版
+	// 为了改迭代版，准备这些栈
 	public static int[][] ufeStack = new int[MAXN][3];
 
 	public static long[] distStack = new long[MAXN];
@@ -103,13 +99,13 @@ public class Code02_DiameterAndCommonEdges2 {
 		c = distStack[stackSize];
 	}
 
-	public static void dfs(int root) {
+	public static void dfs1(int root) {
 		stackSize = 0;
 		push(root, 0, -1, 0);
 		while (stackSize > 0) {
 			pop();
 			if (e == -1) {
-				last[u] = f;
+				path[u] = f;
 				dist[u] = c;
 				e = head[u];
 			} else {
@@ -124,15 +120,13 @@ public class Code02_DiameterAndCommonEdges2 {
 		}
 	}
 
-	// maxDistanceExceptDiameter方法改迭代版
-	// 不会改看讲解118，讲了怎么从递归版改成迭代版
-	public static long maxDistanceExceptDiameter(int root) {
+	public static void dfs2(int root) {
 		stackSize = 0;
 		push(root, 0, -1, 0);
-		long ans = 0;
 		while (stackSize > 0) {
 			pop();
 			if (e == -1) {
+				dist[u] = c;
 				e = head[u];
 			} else {
 				e = next[e];
@@ -141,40 +135,38 @@ public class Code02_DiameterAndCommonEdges2 {
 			if (e != 0) {
 				push(u, f, e, c);
 				v = to[e];
-				if (!diameterPath[v] && v != f) {
+				if (!visited[v] && v != f) {
 					push(v, u, -1, c + weight[e]);
 				}
 			} else {
-				ans = Math.max(ans, c);
+				maxDist = Math.max(maxDist, dist[u]);
 			}
 		}
-		return ans;
 	}
 
 	public static void compute() {
-		road();
-		for (int i = end; i != 0; i = last[i]) {
-			diameterPath[i] = true;
+		sedp();
+		for (int i = end; i != 0; i = path[i]) {
+			visited[i] = true;
 		}
 		int l = start;
 		int r = end;
-		long maxDist;
-		for (int i = last[end]; i != start; i = last[i]) {
-			maxDist = maxDistanceExceptDiameter(i);
-			if (maxDist == diameter - dist[i]) {
+		boolean flag = false;
+		for (int i = path[end]; i != start; i = path[i]) {
+			long ldist = dist[i], rdist = dist[end] - dist[i];
+			dist[i] = maxDist = 0;
+			dfs2(i);
+			if (maxDist == rdist) {
 				r = i;
 			}
-			if (maxDist == dist[i] && l == start) {
+			if (maxDist == ldist && !flag) {
+				flag = true;
 				l = i;
 			}
 		}
-		if (l == r) {
-			commonEdges = 0;
-		} else {
-			commonEdges = 1;
-			for (int i = last[r]; i != l; i = last[i]) {
-				commonEdges++;
-			}
+		commonEdges = 1;
+		for (int i = path[r]; i != l; i = path[i]) {
+			commonEdges++;
 		}
 	}
 

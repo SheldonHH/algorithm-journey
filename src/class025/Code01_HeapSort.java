@@ -13,6 +13,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StreamTokenizer;
 
+
+// 每一层加满了才启动下一层
 public class Code01_HeapSort {
 	
 	public static int MAXN = 100001;
@@ -43,15 +45,18 @@ public class Code01_HeapSort {
 	}
 
 	// i位置的数，向上调整大根堆
+	// 5-1/2=2向下取整
 	public static void heapInsert(int i) {
-		while (arr[i] > arr[(i - 1) / 2]) {
+		while (arr[i] > arr[(i - 1) / 2]) { //比父亲大，就交换，真实调整的是数组
 			swap(i, (i - 1) / 2);
-			i = (i - 1) / 2;
+			i = (i - 1) / 2; // 父亲节点
 		}
 	}
 
 	// i位置的数，向下调整大根堆
-	// 当前堆的大小为size
+	// 当前堆的大小为size，管着完全二叉树的大小，超过则说明不存在
+	// 堆就是在数组上的完全二叉树
+	// 任何一个最大值，在顶部🔝
 	public static void heapify(int i, int size) {
 		int l = i * 2 + 1;
 		while (l < size) {

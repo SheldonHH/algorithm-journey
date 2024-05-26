@@ -22,23 +22,28 @@ public class Code02_PredictTheWinner {
 		}
 		int n = nums.length;
 		int first = f1(nums, 0, n - 1);
-		int second = sum - first;
+		int second = sum - first; // 整体累加和-先手的分数=后手的分数
 		return first >= second;
 	}
 
-	// nums[l...r]范围上的数字进行游戏，轮到玩家1
-	// 返回玩家1最终能获得多少分数，玩家1和玩家2都绝顶聪明
+	// nums[l...r]范围上的数字进行游戏（其他范围不管），轮到玩家1（先手）
+	// （玩家1获得多少分数）返回玩家1最终能获得多少分数，玩家1和玩家2都绝顶聪明
 	public static int f1(int[] nums, int l, int r) {
-		if (l == r) {
+		if (l == r) { // l==r 只有一个数
 			return nums[l];
 		}
-		if (l == r - 1) {
-			return Math.max(nums[l], nums[r]);
+		if (l == r - 1) {  // l...r 只有两个数
+			return Math.max(nums[l], nums[r]); // 当然选最大的
 		}
+
 		// l....r 不只两个数
-		// 可能性1 ：玩家1拿走nums[l] l+1...r
+		// 可能性1 ：玩家1拿走nums[l] 在l+1...r范围上挑选
+		// l+1...r  玩家2选l+1  l+2...r  玩家2选r l+1...r-1
 		int p1 = nums[l] + Math.min(f1(nums, l + 2, r), f1(nums, l + 1, r - 1));
+
+
 		// 可能性2 ：玩家1拿走nums[r] l...r-1
+		// l...r-1  玩家2选l  l+1...r-1  玩家2选r-1 l...r-2
 		int p2 = nums[r] + Math.min(f1(nums, l + 1, r - 1), f1(nums, l, r - 2));
 		return Math.max(p1, p2);
 	}

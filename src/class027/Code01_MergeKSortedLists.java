@@ -16,7 +16,7 @@ public class Code01_MergeKSortedLists {
 	// 提交以下的方法
 	public static ListNode mergeKLists(ArrayList<ListNode> arr) {
 		// 小根堆
-		PriorityQueue<ListNode> heap = new PriorityQueue<>((a, b) -> a.val - b.val);
+		PriorityQueue<ListNode> heap = new PriorityQueue<>((a, b) -> a.val - b.val); // 小跟对
 		for (ListNode h : arr) {
 			// 遍历所有的头！
 			if (h != null) {
@@ -30,14 +30,15 @@ public class Code01_MergeKSortedLists {
 		ListNode h = heap.poll();
 		ListNode pre = h;
 		if (pre.next != null) {
-			heap.add(pre.next);
+			heap.add(pre.next); // 若还有加入 
 		}
 		while (!heap.isEmpty()) {
-			ListNode cur = heap.poll();
-			pre.next = cur;
+			ListNode cur = heap.poll(); // 每次弹出一个节点
+			// pre往下跳
+			pre.next = cur; // 链接到总链表上
 			pre = cur;
 			if (cur.next != null) {
-				heap.add(cur.next);
+				heap.add(cur.next); 
 			}
 		}
 		return h;

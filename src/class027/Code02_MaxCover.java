@@ -43,6 +43,7 @@ public class Code02_MaxCover {
 		br.close();
 	}
 
+	// 小根堆永远放结束位置
 	public static int compute() {
 		// 堆的清空
 		size = 0;
@@ -50,21 +51,22 @@ public class Code02_MaxCover {
 		// 线段一共有n条，line[0...n-1][2] : line[i][0] line[i][1], 左闭右闭
 		// 所有线段，根据开始位置排序，结束位置无所谓
 		// 比较器的用法
-		// line [0...n) 排序 : 所有小数组，开始位置谁小谁在前
-		Arrays.sort(line, 0, n, (a, b) -> a[0] - b[0]);
+		// line [0...n) 排序 : 所有小数组，开始位置谁小谁在前，结束无所谓
+		Arrays.sort(line, 0, n, (a, b) -> a[0] - b[0]); // 每一个线段两个数据
 		int ans = 0;
 		for (int i = 0; i < n; i++) {
 			// i : line[i][0] line[i][1]
-			while (size > 0 && heap[0] <= line[i][0]) {
-				pop();
+			// 估计时间复杂度：n个结束位置，最多进堆一次，出堆一次，所以 O（NlogN）
+			while (size > 0 && heap[0] <= line[i][0]) { //  堆里面还有元素，看一眼堆顶，且小于等于line[i][0]
+				pop(); // 弹出小跟堆里面，新的开头节点要刚好大于等于heap的头元素
 			}
-			add(line[i][1]);
-			ans = Math.max(ans, size);
+			add(line[i][1]); // 到堆的结束位置加到堆里去 ，然后统计小根堆的个数
+			ans = Math.max(ans, size); // 任何重合区域都是一每一条线段左边届
 		}
 		return ans;
 	}
 
-	// 小根堆，堆顶0位置
+	// 小根堆，堆顶0位置，存储结尾的位置
 	public static int[] heap = new int[MAXN];
 
 	// 堆的大小
@@ -75,12 +77,12 @@ public class Code02_MaxCover {
 		int i = size++;
 		while (heap[i] < heap[(i - 1) / 2]) {
 			swap(i, (i - 1) / 2);
-			i = (i - 1) / 2;
+			i = (i - 1) / 2; //若比自己父亲小，那么是小根堆
 		}
 	}
 
 	public static void pop() {
-		swap(0, --size);
+		swap(0, --size); // 堆底的最后一个位置切换到0位置，然后堆大小减少
 		int i = 0, l = 1;
 		while (l < size) {
 			int best = l + 1 < size && heap[l + 1] < heap[l] ? l + 1 : l;
@@ -109,10 +111,10 @@ public class Code02_MaxCover {
 		PriorityQueue<Integer> heap = new PriorityQueue<>();
 		int ans = 0;
 		for (int i = 0; i < n; i++) {
-			while (!heap.isEmpty() && heap.peek() <= meeting[i][0]) {
+			while (!heap.isEmpty() && heap.peek() <= meeting[i][0]) { // 
 				heap.poll();
 			}
-			heap.add(meeting[i][1]);
+			heap.add(meeting[i][1]); // 小跟对加入结尾的位置
 			ans = Math.max(ans, heap.size());
 		}
 		return ans;

@@ -9,7 +9,8 @@ public class Code01_Subsequences {
 
 	public static String[] generatePermutation1(String str) {
 		char[] s = str.toCharArray();
-		HashSet<String> set = new HashSet<>();
+		HashSet<String> set = new HashSet<>(); //收集结果去重
+		// https://www.bilibili.com/opus/935818042000015366?spm_id_from=333.999.0.0
 		f1(s, 0, new StringBuilder(), set);
 		int m = set.size();
 		String[] ans = new String[m];
@@ -32,6 +33,8 @@ public class Code01_Subsequences {
 		}
 	}
 
+
+
 	public static String[] generatePermutation2(String str) {
 		char[] s = str.toCharArray();
 		HashSet<String> set = new HashSet<>();
@@ -44,13 +47,20 @@ public class Code01_Subsequences {
 		}
 		return ans;
 	}
+	// size表示路径填入了几个字符了
+	// 利用了数组不断复用的原理
+	// 为啥这样写之后不用擦出
+	// path和size依然是全局的
+	// size:路径填入了几个
 
+	// 有效的其实就是a,b 两个用专属的size来管谁有效，谁没效
 	public static void f2(char[] s, int i, char[] path, int size, HashSet<String> set) {
 		if (i == s.length) {
 			set.add(String.valueOf(path, 0, size));
 		} else {
 			path[size] = s[i];
 			f2(s, i + 1, path, size + 1, set);
+			// 有效的其实就是a,b 两个用专属的size来管谁有效，谁没效
 			f2(s, i + 1, path, size, set);
 		}
 	}

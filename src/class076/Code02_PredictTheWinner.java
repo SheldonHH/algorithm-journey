@@ -45,6 +45,9 @@ public class Code02_PredictTheWinner {
 		// 可能性2 ：玩家1拿走nums[r] l...r-1
 		// l...r-1  玩家2选l  l+1...r-1  玩家2选r-1 l...r-2
 		int p2 = nums[r] + Math.min(f1(nums, l + 1, r - 1), f1(nums, l, r - 2));
+		// 上面的内容选最小值
+
+
 		return Math.max(p1, p2);
 	}
 
@@ -66,6 +69,8 @@ public class Code02_PredictTheWinner {
 		return first >= second;
 	}
 
+// 	l和:0-(n-1)， dp表是n*n的表
+// https://www.bilibili.com/opus/935688707397124101?spm_id_from=333.999.0.0
 	public static int f2(int[] nums, int l, int r, int[][] dp) {
 		if (dp[l][r] != -1) {
 			return dp[l][r];
@@ -104,9 +109,10 @@ public class Code02_PredictTheWinner {
 						nums[r] + Math.min(dp[l + 1][r - 1], dp[l][r - 2]));
 			}
 		}
-		int first = dp[0][n - 1];
-		int second = sum - first;
+		int first = dp[0][n - 1];// 0...n-1 代表先手的分数，是dp表的最右上角的位置
+		int second = sum - first; // 整体累加和-先手的分数=后手的分数
 		return first >= second;
 	}
+	// 空间压缩不容易， 因为跳跃性太大，不容易压缩
 
 }

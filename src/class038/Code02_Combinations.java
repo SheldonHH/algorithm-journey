@@ -10,6 +10,12 @@ import java.util.List;
 // 比如输入：nums = [1,2,2]
 // 输出：[[],[1],[1,2],[1,2,2],[2],[2,2]]
 // 测试链接 : https://leetcode.cn/problems/subsets-ii/
+
+
+// 441和144是不同的排列，但是同样的组合
+// 返回441就别反回44了
+// https://www.bilibili.com/opus/935834727949008898?spm_id_from=333.999.0.0
+// 所以建议先排序
 public class Code02_Combinations {
 
 	public static List<List<Integer>> subsetsWithDup(int[] nums) {

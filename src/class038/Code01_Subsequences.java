@@ -6,6 +6,7 @@ import java.util.HashSet;
 // 子序列本身是可以有重复的，只是这个题目要求去重
 // 测试链接 : https://www.nowcoder.com/practice/92e6247998294f2c933906fdedbc6e6a
 public class Code01_Subsequences {
+	// O(2^N*N)
 
 	public static String[] generatePermutation1(String str) {
 		char[] s = str.toCharArray();
@@ -34,7 +35,7 @@ public class Code01_Subsequences {
 	}
 
 
-
+	// f32有效范围就是2个
 	public static String[] generatePermutation2(String str) {
 		char[] s = str.toCharArray();
 		HashSet<String> set = new HashSet<>();
@@ -51,9 +52,9 @@ public class Code01_Subsequences {
 	// 利用了数组不断复用的原理
 	// 为啥这样写之后不用擦出
 	// path和size依然是全局的
-	// size:路径填入了几个
-
-	// 有效的其实就是a,b 两个用专属的size来管谁有效，谁没效
+	// size:路径填入了几个 有效的范围是啥，盖进去
+ 
+	// 有效的其实就是a,b 两个用专属的size来管谁有效，谁没效 https://www.bilibili.com/opus/935820979758694403?spm_id_from=333.999.0.0
 	public static void f2(char[] s, int i, char[] path, int size, HashSet<String> set) {
 		if (i == s.length) {
 			set.add(String.valueOf(path, 0, size));

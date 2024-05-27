@@ -14,12 +14,12 @@ public class Code02_ReverseNodesInkGroup {
 	public static ListNode reverseKGroup(ListNode head, int k) {
 		ListNode start = head;
 		ListNode end = teamEnd(start, k);
-		if (end == null) {
+		if (end == null) { //不足够k个可以直接返回
 			return head;
 		}
 		// 第一组很特殊因为牵扯到换头的问题
 		head = end;
-		reverse(start, end);
+		reverse(start, end); // 第一组reverse了
 		// 翻转之后start变成了上一组的结尾节点
 		ListNode lastTeamEnd = start;
 		while (lastTeamEnd.next != null) {

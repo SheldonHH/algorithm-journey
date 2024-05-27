@@ -5,61 +5,56 @@
 
 using namespace std;
 
-// 生成字符串的所有不重复子序列
-vector<string> generatePermutation1(const string& str) {
-    auto f1 = [](const vector<char>& s, int i, string& path, unordered_set<string>& set) {
-        if (i == s.size()) {
-            set.insert(path);
-        } else {
-            path.push_back(s[i]); // 加入路径
-            f1(s, i + 1, path, set);
-            path.pop_back(); // 移除路径
-            f1(s, i + 1, path, set);
-        }
-    };
+// 字符串的全部子序列
+// 子序列本身是可以有重复的，只是这个题目要求去重
 
+void f1(const vector<char>& s, size_t i, string& path, unordered_set<string>& set) {
+    if (i == s.size()) {
+        set.insert(path);
+    } else {
+        path.push_back(s[i]); // 加到路径中去
+        f1(s, i + 1, path, set);
+        path.pop_back(); // 从路径中移除
+        f1(s, i + 1, path, set);
+    }
+}
+
+vector<string> generate_permutation(const string& str) {
     vector<char> s(str.begin(), str.end());
     unordered_set<string> set;
     string path;
     f1(s, 0, path, set);
-
     return vector<string>(set.begin(), set.end());
 }
 
-// 使用固定大小的char数组来生成子序列
-vector<string> generatePermutation2(const string& str) {
-    auto f2 = [](const vector<char>& s, int i, vector<char>& path, int size, unordered_set<string>& set) {
-        if (i == s.size()) {
-            set.insert(string(path.begin(), path.begin() + size));
-        } else {
-            path[size] = s[i];
-            f2(s, i + 1, path, size + 1, set);
-            f2(s, i + 1, path, size, set);
-        }
-    };
+void f2(const vector<char>& s, size_t i, vector<char>& path, size_t size, unordered_set<string>& set) {
+    if (i == s.size()) {
+        set.insert(string(path.begin(), path.begin() + size));
+    } else {
+        path[size] = s[i];
+        f2(s, i + 1, path, size + 1, set);
+        f2(s, i + 1, path, size, set);
+    }
+}
 
+vector<string> generate_permutation2(const string& str) {
     vector<char> s(str.begin(), str.end());
     unordered_set<string> set;
     vector<char> path(s.size());
     f2(s, 0, path, 0, set);
-
     return vector<string>(set.begin(), set.end());
 }
 
 int main() {
-    // 测试
-    string str = "abc";
-    auto result1 = generatePermutation1(str);
-    auto result2 = generatePermutation2(str);
-
-    cout << "方法一生成的子序列：" << endl;
-    for (const auto& seq : result1) {
-        cout << seq << endl;
+    string input = "abc";
+    vector<string> result = generate_permutation(input);
+    for (const auto& s : result) {
+        cout << s << endl;
     }
 
-    cout << "方法二生成的子序列：" << endl;
-    for (const auto& seq : result2) {
-        cout << seq << endl;
+    vector<string> result2 = generate_permutation2(input);
+    for (const auto& s : result2) {
+        cout << s << endl;
     }
 
     return 0;

@@ -6,12 +6,15 @@ package class066;
 // 测试链接 : https://leetcode.cn/problems/ugly-number-ii/
 public class Code05_UglyNumberII {
 
-	// 时间复杂度O(n)，n代表第n个丑数
+// 一定是比上一个大，但在所有可能性中尽量小的哪一个
+	// 时间复杂度O(n)，n代表第n个丑数 https://imgur.com/AZRZ46l
 	public static int nthUglyNumber(int n) {
 		// dp 0 1 2 ...  n
 		//      1 2 ...  ?
 		int[] dp = new int[n + 1];
 		dp[1] = 1;
+		// 2，3，5指针，分别停在什么下标
+
 		for (int i = 2, i2 = 1, i3 = 1, i5 = 1, a, b, c, cur; i <= n; i++) {
 			a = dp[i2] * 2;
 			b = dp[i3] * 3;

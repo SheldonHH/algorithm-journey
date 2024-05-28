@@ -30,7 +30,7 @@ public class Code03_DecodeWays {
 		}
 		int ans;
 		if (s[i] == '0') {
-			ans = 0;
+			ans = 0; // 在越界的时候，返回1 也可以认为，在越界的时候有一种转换的方案，叫做空字符串
 		} else {
 			ans = f1(s, i + 1);
 			if (i + 1 < s.length && ((s[i] - '0') * 10 + s[i + 1] - '0') <= 26) {

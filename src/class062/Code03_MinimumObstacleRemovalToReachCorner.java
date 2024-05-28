@@ -11,6 +11,8 @@ import java.util.ArrayDeque;
 // 现在你需要从左上角 (0, 0) 移动到右下角 (m - 1, n - 1) 
 // 返回需要移除的障碍物的最小数目
 // 测试链接 : https://leetcode.cn/problems/minimum-obstacle-removal-to-reach-corner/
+
+// 适用于图中所有边的权重只有0和1的情况
 public class Code03_MinimumObstacleRemovalToReachCorner {
 
 	public static int minimumObstacles(int[][] grid) {

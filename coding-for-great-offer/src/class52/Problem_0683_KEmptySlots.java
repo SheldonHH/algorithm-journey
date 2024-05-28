@@ -39,7 +39,7 @@ public class Problem_0683_KEmptySlots {
 		}
 		return (ans == Integer.MAX_VALUE) ? -1 : ans;
 	}
-
+// 本体的另一个前置条件（灯泡必不重复）
 	public static int kEmptySlots2(int[] bulbs, int k) {
 		int n = bulbs.length;
 		int[] days = new int[n];
@@ -53,15 +53,6 @@ public class Problem_0683_KEmptySlots {
 			// 1) mid在left和right中间验证的时候，没通过！
 			// 2) mid是撞上right的时候
 			if (days[mid] <= Math.max(days[left], days[right])) {
-//				if(mid == right) { // left...right 达标的！
-//					int cur = Math.max(days[left], days[right]);
-//					ans = Math.min(ans, cur);
-//					left  = mid;
-//					right =  mid + k + 1;
-//				} else { // 验证不通过！
-//					left  = mid;
-//					right =  mid + k + 1;
-//				}
 				if (mid == right) { // 收答案！
 					ans = Math.min(ans, Math.max(days[left], days[right]));
 				}

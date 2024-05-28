@@ -17,11 +17,12 @@ public class Code05_ReverseStackWithRecursive {
 	// 栈底元素移除掉，上面的元素盖下来
 	// 返回移除掉的栈底元素
 	public static int bottomOut(Stack<Integer> stack) {
-		int ans = stack.pop();
+		//ans=b重新压入栈
+		int ans = stack.pop(); //我有一个ans为弹出现在栈的东西
 		if (stack.isEmpty()) {
 			return ans;
-		} else {
-			int last = bottomOut(stack);
+		} else { // 弹出非空则需要继续递归
+			int last = bottomOut(stack); //last变量调用底下的递归给我返回
 			stack.push(ans);
 			return last;
 		}

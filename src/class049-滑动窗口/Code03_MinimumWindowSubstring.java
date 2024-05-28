@@ -6,22 +6,25 @@ package class049;
 // 测试链接 : https://leetcode.cn/problems/minimum-window-substring/
 public class Code03_MinimumWindowSubstring {
 
+//一张表和总欠债 https://www.bilibili.com/opus/936601207811604528?spm_id_from=333.999.0.0
 	public static String minWindow(String str, String tar) {
-		if (str.length() < tar.length()) {
+		if (str.length() < tar.length()) { // 长度还没有欠债的数组大
 			return "";
 		}
 		char[] s = str.toCharArray();
 		char[] t = tar.toCharArray();
 		int[] cnts = new int[256];
 		for (char cha : t) {
-			cnts[cha]--;
+			cnts[cha]--; // 欠债表
 		}
 		// 最小覆盖子串的长度
 		int len = Integer.MAX_VALUE;
 		// 从哪个位置开头，发现的这个最小覆盖子串
-		int start = 0;
+		int start = 0;//返回字符串是啥
+		// 讨论以每一个r结尾的情况下，向左延申的最小覆盖字串长度
 		for (int l = 0, r = 0, debt = t.length; r < s.length; r++) {
 			// s[r] 当前字符 -> int
+			
 			// cnts[s[r]] : 当前字符欠债情况，负数就是欠债，正数就是多给的
 			if (cnts[s[r]]++ < 0) {
 				debt--;

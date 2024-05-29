@@ -26,7 +26,7 @@ public class Code03_MinimumWindowSubstring {
 			// s[r] 当前字符 -> int
 			
 			// cnts[s[r]] : 当前字符欠债情况，负数就是欠债，正数就是多给的
-			if (cnts[s[r]]++ < 0) {
+			if (cnts[s[r]]++ < 0) { // 有效的还款
 				debt--;
 			}
 			if (debt == 0) {
@@ -47,4 +47,4 @@ public class Code03_MinimumWindowSubstring {
 		return len == Integer.MAX_VALUE ? "" : str.substring(start, start + len);
 	}
 
-}
+} 

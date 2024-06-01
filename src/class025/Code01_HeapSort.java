@@ -46,6 +46,7 @@ public class Code01_HeapSort {
 
 	// i位置的数，向上调整大根堆
 	// 5-1/2=2向下取整
+	// 往上看，直到不比父亲大，或来到0位置（顶部）
 	public static void heapInsert(int i) {
 		while (arr[i] > arr[(i - 1) / 2]) { //比父亲大，就交换，真实调整的是数组
 			swap(i, (i - 1) / 2);

@@ -1,5 +1,11 @@
 package class062;
 
+// 可能是单点弹出或整层弹出
+// 必须是等权重的才能用bfs,否则必须用djkisjstra
+// https://www.bilibili.com/opus/936462793667772439?spm_id_from=333.999.0.0
+// 从C和F到Z的最短距离:https://www.bilibili.com/opus/936464850941378583?spm_id_from=333.999.0.0
+
+
 // 地图分析
 // 你现在手里有一份大小为 n x n 的 网格 grid
 // 上面的每个 单元格 都用 0 和 1 标记好了其中 0 代表海洋，1 代表陆地。
